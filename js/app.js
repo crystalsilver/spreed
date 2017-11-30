@@ -621,8 +621,8 @@
 
 			if (!$hideVideoButton.hasClass('no-video-available')) {
 				$hideVideoButton.attr('data-original-title', t('spreed', 'Enable video'))
-				 .addClass('video-disabled icon-video-off-white')
-				 .removeClass('icon-video-white');
+					.addClass('video-disabled icon-video-off-white')
+					.removeClass('icon-video-white');
 			}
 
 			var avatar = avatarContainer.find('.avatar');
