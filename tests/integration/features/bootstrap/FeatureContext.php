@@ -458,6 +458,38 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	}
 
 	/**
+	 * @Given /^Comments app is enabled$/
+	 */
+	public function commentsAppIsEnabled() {
+		$disableAppUrl = $this->baseUrl . 'ocs/v2.php/cloud/apps/comments';
+		$client = new Client();
+		$options = [
+			'auth' => ['admin', 'admin'],
+			'headers' => [
+				'OCS-APIREQUEST' => 'true',
+			],
+		];
+		$response = $client->send($client->createRequest('POST', $disableAppUrl, $options));
+		$this->assertStatusCode($response, 200);
+	}
+
+	/**
+	 * @Given /^Comments app is disabled$/
+	 */
+	public function commentsAppIsDisabled() {
+		$disableAppUrl = $this->baseUrl . 'ocs/v2.php/cloud/apps/comments';
+		$client = new Client();
+		$options = [
+			'auth' => ['admin', 'admin'],
+			'headers' => [
+				'OCS-APIREQUEST' => 'true',
+			],
+		];
+		$response = $client->send($client->createRequest('DELETE', $disableAppUrl, $options));
+		$this->assertStatusCode($response, 200);
+	}
+
+	/**
 	 * Parses the xml answer to get the array of users returned.
 	 * @param ResponseInterface $response
 	 * @return array

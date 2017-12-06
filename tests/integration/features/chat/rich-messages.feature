@@ -3,6 +3,7 @@ Feature: chat/public
     Given user "participant1" exists
     Given user "participant2" exists
     Given user "participant3" exists
+    Given Comments app is enabled
 
   Scenario: message without enrichable references has empty parameters
     Given user "participant1" creates room "public room"
@@ -43,3 +44,12 @@ Feature: chat/public
     Then user "participant1" sees the following messages in room "public room" with 200
       | room        | actorType | actorId      | actorDisplayName         | message                                                                                | messageParameters |
       | public room | users     | participant1 | participant1-displayname | Mention to {mention-user1}, {mention-user2}, {mention-user1} again and {mention-user3} | {"mention-user1":{"type":"user","id":"participant2","name":"participant2-displayname"},"mention-user2":{"type":"user","id":"unknownUser","name":"Unknown user"},"mention-user3":{"type":"user","id":"participant3","name":"participant3-displayname"}} |
+
+  Scenario: message with mentions to several users has mention parameters even if Comments app is disabled
+    Given user "participant1" creates room "public room"
+      | roomType | 3 |
+    And Comments app is disabled
+    When user "participant1" sends message "Mention to @participant2, @unknownUser, @participant2 again and @participant3" to room "public room" with 201
+    Then user "participant1" sees the following messages in room "public room" with 200
+      | room        | actorType | actorId      | actorDisplayName         | message                                                                                | messageParameters |
+      | public room | users     | participant1 | participant1-displayname | Mention to {mention-user1}, {mention-user2}, {mention-user1} again and {mention-user3} | {"mention-user1":{"type":"user","id":"participant2","name":""},"mention-user2":{"type":"user","id":"unknownUser","name":""},"mention-user3":{"type":"user","id":"participant3","name":""}} |
